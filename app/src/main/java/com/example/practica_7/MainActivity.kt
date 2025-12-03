@@ -20,6 +20,8 @@ class MainActivity : AppCompatActivity() {
         }
         val btnSupabase1 = findViewById<Button>(R.id.btnSupabase1)
         val btnSupabase2 = findViewById<Button>(R.id.btnSupabase2)
+        val btnGemini = findViewById<Button>(R.id.btnGemini)
+
 
         btnSupabase1.setOnClickListener {
             val intent = Intent(this, supaBaseActivity1::class.java)
@@ -29,7 +31,9 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, supaBaseActivity2::class.java)
             startActivity(intent)
         }
+        btnGemini.setOnClickListener {
+            val intent = Intent(this, Gemini::class.java)
+            startActivity(intent)
+        }
     }
-
-
 }
