@@ -16,51 +16,53 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class Gemini : AppCompatActivity() {
-    private lateinit var txtTexto: MultiAutoCompleteTextView
-    private lateinit var btnMejorar: Button
-    private lateinit var progressBar: ProgressBar
+    
+        private lateinit var txtTexto : MultiAutoCompleteTextView
+        private lateinit var btnMejorar : Button
+        private lateinit var progressBar2 : ProgressBar
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_gemini)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-        txtTexto = findViewById(R.id.txtTexto)
-        btnMejorar = findViewById(R.id.btnMejorar)
-        progressBar = findViewById(R.id.progressBar2)
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            enableEdgeToEdge()
+            setContentView(R.layout.activity_gemini)
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                insets
+            }
+            txtTexto = findViewById(R.id.txtTexto)
+            btnMejorar = findViewById(R.id.btnMejorar)
+            progressBar2 = findViewById(R.id.progressBar2)
 
-        btnMejorar.setOnClickListener {
-            btnMejorar.isEnabled = false //bloquear el boton para que no le pueda picar varias veces
-            txtTexto.isEnabled = false //bloquear el texto para que no se pueda editar
-            progressBar.visibility = View.VISIBLE //mostrar el progressbar
+            btnMejorar.setOnClickListener {
+                btnMejorar.isEnabled = false
+                txtTexto = findViewById(R.id.txtTexto)
+                progressBar2.visibility = View.VISIBLE
 
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val respuesta = GeminiRepository().askGemini("mejora el siguiente text, solo regresame el texto mejorado no incluyas nada mas: ${txtTexto.text.toString()}")
-                    runOnUiThread {
-                        txtTexto.setText(respuesta)
+                CoroutineScope(Dispatchers.IO).launch{
+                    try {
+                        val respuesta = GeminiRepository().askGemini("Mejorar el siguiente texto,solo regresame el teto mejorado no incluyas nada: ${txtTexto.text.toString()}")
+                        runOnUiThread{
+                            txtTexto.setText(respuesta)
+                        }
+                    }catch (e: Exception){
+                        runOnUiThread {
+                            txtTexto.setText("Error : ${e.localizedMessage}")
+                        }
+
+                    }finally {
+                        runOnUiThread {
+                            btnMejorar.isEnabled = true
+                            txtTexto.isEnabled = true
+                            progressBar2.visibility = View.GONE
+                        }
+
                     }
 
-
-                } catch (e: Exception) {
-                    runOnUiThread {
-                        txtTexto.setText("Error: ${e.localizedMessage}")
-                    }
-
-                } finally {
-                    runOnUiThread {
-                        txtTexto.isEnabled = true
-                        btnMejorar.isEnabled = true
-                        progressBar.visibility = View.GONE
-
-                    }
                 }
+
             }
         }
+
     }
-}

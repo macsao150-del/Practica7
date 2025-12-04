@@ -16,27 +16,36 @@ import io.ktor.http.contentType
 class GeminiRepository {
     private val client = HttpProvider.client
     private val baseUrl = "https://generativelanguage.googleapis.com/v1beta/models"
-    private val apikey = "AIzaSyBBkglwB4RbNUo4VSK28ubM0FQMz14fP-Y"
+    private val apiKey = "AIzaSyAaf2ND2rHGWvfxN25rx08ttIJmi7TL_tU"
 
-    suspend fun askGemini(prompt: String): String {
+    suspend fun askGemini(prompt: String ) : String{
         val request = GeminiRequest(
             contents = listOf(
                 GeminiContent(parts = listOf(GeminiPart(text = prompt)))
             )
         )
-
-        val response: HttpResponse = client.post("$baseUrl/gemini-2.5-flash:generateContent"){ ///parte final de la url
-                contentType(ContentType.Application.Json)
-                header("x-goog-api-key", apikey)
-                setBody(request)
+        val response: HttpResponse = client.post("$baseUrl/gemini-2.5-flash:generateContent"){
+            contentType(ContentType.Application.Json)
+            header("x-goog-api-key",apiKey)//llave de accseo
+            setBody(request)//peticion
         }
-
         val body : GeminiResponse = response.body()
-
-        //?este sirve para que si no hay respuesta, no se pare la app
+        //HAce que te delvuela solo  la cadena de texto, (sin caracteres de peticion o devolvente)
         return body.candidates?.
-                firstOrNull()?.
-                content?.parts?.
-                firstOrNull()?.text ?: "Sin respuesta"
+        firstOrNull()?.
+        content?.parts?.
+        firstOrNull()?.text ?: "Sin respuesta booo"
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
